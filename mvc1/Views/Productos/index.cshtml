@@ -1,0 +1,61 @@
+﻿@using mvc1.Helpers
+@model List<Productos>
+
+@{
+    var startIndex = ViewBag.pagination.StartIndex;
+    var endIndex = ViewBag.pagination.ItemsPerPage + startIndex;
+}
+
+
+<a class="btn btn-success" asp-area="" asp-controller="Productos" asp-action="Create">Create</a>
+
+@using (Html.BeginForm("Search", "Productos", FormMethod.Get))
+{
+    <div class="input-group mb-3">
+        <input type="search" id="nombre" name="nombre" class="form-control" />
+        <button type="submit"  class="input-group-text">Filtrar</button>
+    </div>
+}
+<nav style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Mostrando @startIndex-@endIndex de @ViewBag.pagination.TotalItems elementos.</li>
+  </ol>
+</nav>
+<table class="table table-bordered">
+    <tr>
+        <td>Nombre</td>
+        <td>Descripcion</td>
+        <td>Editar</td>
+        <td>Eliminar</td>
+        <td>Ver</td>
+    </tr>  
+
+    @foreach (var producto in Model)
+    {
+        <tr>
+            <td>@producto.Nombre</td>
+            <td>@producto.Descripcion</td>
+            <td>
+                <a asp-area="" asp-controller="Productos" asp-action="update" asp-route-id="@producto.Id" class="btn btn-info">Editar</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" asp-controller="Productos" asp-action="delete" asp-route-id="@producto.Id" onclick="return confirm('¿Estás seguro de que deseas eliminar este elemento?')">Eliminar</a>
+            </td>           
+            <td>
+                <a class="btn btn-success" asp-controller="Productos" asp-action="view" asp-route-id="@producto.Id">Ver</a>
+            </td>
+        </tr>
+    }
+</table>
+
+@{
+    var paginationModel = new PaginationViewModel
+            {
+                CurrentPage = ViewBag.pagination.CurrentPage,
+                TotalPages = ViewBag.pagination.TotalPages,
+                ControllerName = "Productos",
+                ActionName = "Index"
+            };
+}
+
+@await Html.PartialAsync("_Paginator", paginationModel)
