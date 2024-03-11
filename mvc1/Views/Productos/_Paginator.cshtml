@@ -1,0 +1,19 @@
+﻿@using mvc1.Helpers
+@model PaginationViewModel
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+            <a class="page-link" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@Model.PreviousPage" asp-route-nombre="@Model.Filtros">Anterior</a>
+        </li>
+        @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@i" asp-route-nombre="@Model.Filtros">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+            <a class="page-link" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@Model.NextPage" asp-route-nombre="@Model.Filtros">Siguiente</a>
+        </li>
+    </ul>
+</nav>

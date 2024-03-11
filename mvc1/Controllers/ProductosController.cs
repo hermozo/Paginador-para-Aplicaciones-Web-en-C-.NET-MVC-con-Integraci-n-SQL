@@ -16,33 +16,24 @@ namespace mvc1.Controllers
         }
 
         [HttpGet("index")]
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(int page = 1, string nombre = "")
         {
-            var query = _appDbContext.Productos.AsQueryable();
-            int totalProductos = query.Count();
-            var pagination = new Paginacion(page,  totalProductos);
-            var productos = query.Skip(pagination.StartIndex).Take(pagination.ItemsPerPage).ToList();
-            ViewBag.pagination = pagination;
-            return View("index", productos);
-        }
-
-        [HttpGet("search")]
-        public ActionResult Search(int page, string nombre, string descripcion)
-        {
-            var query = _appDbContext.Productos.AsQueryable();
+            IQueryable<Productos> query = _appDbContext.Productos;
             if (!string.IsNullOrEmpty(nombre))
             {
                 query = query.Where(p => p.Nombre.Contains(nombre));
             }
-            if (!string.IsNullOrEmpty(descripcion))
-            {
-                query = query.Where(p => p.Descripcion.Contains(descripcion));
-            }
             int totalProductos = query.Count();
-            var pagination = new Paginacion(page, totalProductos);
-            var productos = query.Skip(pagination.StartIndex).Take(pagination.ItemsPerPage).ToList();
+            Paginacion pagination = new Paginacion(page, totalProductos);
+            List<Productos> productos = query
+                .Skip(pagination.StartIndex)
+                .Take(pagination.ItemsPerPage)
+                .ToList();
+            ViewBag.pagination = pagination;
+            ViewBag.Nombre = nombre;
             return View("index", productos);
         }
+
 
 
         [HttpGet("view/{id}")]

@@ -6,56 +6,63 @@
     var endIndex = ViewBag.pagination.ItemsPerPage + startIndex;
 }
 
-
-<a class="btn btn-success" asp-area="" asp-controller="Productos" asp-action="Create">Create</a>
-
-@using (Html.BeginForm("Search", "Productos", FormMethod.Get))
-{
-    <div class="input-group mb-3">
-        <input type="search" id="nombre" name="nombre" class="form-control" />
-        <button type="submit"  class="input-group-text">Filtrar</button>
+<div class="row">
+    <div class="col-md-4">
+        <a class="btn btn-success" asp-area="" asp-controller="Productos" asp-action="Create">Create</a>
     </div>
-}
-<nav style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
-  <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Mostrando @startIndex-@endIndex de @ViewBag.pagination.TotalItems elementos.</li>
-  </ol>
-</nav>
-<table class="table table-bordered">
-    <tr>
-        <td>Nombre</td>
-        <td>Descripcion</td>
-        <td>Editar</td>
-        <td>Eliminar</td>
-        <td>Ver</td>
-    </tr>  
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        @using (Html.BeginForm(FormMethod.Get))
+        {
+            <div class="input-group mb-3">
+                <input type="search" id="nombre" name="nombre" class="form-control" placeholder="Buscar" value="@ViewBag.Nombre" />
+                <button type="submit" class="input-group-text">Filtrar</button>
+            </div>
+        }
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <nav style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Mostrando @startIndex-@endIndex de @ViewBag.pagination.TotalItems elementos.</li>
+            </ol>
+        </nav>
+        <table class="table table-bordered">
+            <tr>
+                <td>Nombre</td>
+                <td>Descripcion</td>
+                <td style="width:250px">Acciones</td>
+            </tr>
 
-    @foreach (var producto in Model)
-    {
-        <tr>
-            <td>@producto.Nombre</td>
-            <td>@producto.Descripcion</td>
-            <td>
-                <a asp-area="" asp-controller="Productos" asp-action="update" asp-route-id="@producto.Id" class="btn btn-info">Editar</a>
-            </td>
-            <td>
-                <a class="btn btn-danger" asp-controller="Productos" asp-action="delete" asp-route-id="@producto.Id" onclick="return confirm('¿Estás seguro de que deseas eliminar este elemento?')">Eliminar</a>
-            </td>           
-            <td>
-                <a class="btn btn-success" asp-controller="Productos" asp-action="view" asp-route-id="@producto.Id">Ver</a>
-            </td>
-        </tr>
-    }
-</table>
-
-@{
-    var paginationModel = new PaginationViewModel
+            @foreach (var producto in Model)
+            {
+                <tr>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.Descripcion</td>
+                    <td>
+                        <a asp-area="" asp-controller="Productos" asp-action="update" asp-route-id="@producto.Id" class="btn btn-info">Editar</a>
+                        <a class="btn btn-danger" asp-controller="Productos" asp-action="delete" asp-route-id="@producto.Id" onclick="return confirm('¿Estás seguro de que deseas eliminar este elemento?')">Eliminar</a>
+                        <a class="btn btn-success" asp-controller="Productos" asp-action="view" asp-route-id="@producto.Id">Ver</a>
+                    </td>
+                </tr>
+            }
+        </table>
+        @{
+            var paginationModel = new PaginationViewModel
             {
                 CurrentPage = ViewBag.pagination.CurrentPage,
                 TotalPages = ViewBag.pagination.TotalPages,
                 ControllerName = "Productos",
-                ActionName = "Index"
+                ActionName = "Index",
+                Filtros = ViewBag.Nombre
             };
-}
+        }
 
-@await Html.PartialAsync("_Paginator", paginationModel)
+        @await Html.PartialAsync("_Paginator", paginationModel)
+    </div>
+</div>
+
+
+
+

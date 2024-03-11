@@ -7,7 +7,7 @@
         public int TotalItems { get; private set; }
         public int TotalPages => (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage);
         public int StartIndex => (CurrentPage - 1) * ItemsPerPage;
-
+        public string Filtros { get; set; }
         public Paginacion(int currentPage, int totalItems)
         {
             CurrentPage = Math.Max(1, currentPage);

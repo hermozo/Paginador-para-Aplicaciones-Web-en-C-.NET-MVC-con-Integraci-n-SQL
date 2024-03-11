@@ -6,6 +6,7 @@
         public int TotalPages { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
+        public string Filtros { get; set; }
         public int PreviousPage => CurrentPage - 1;
         public int NextPage => CurrentPage + 1;
         public bool HasPreviousPage => CurrentPage > 1;
