@@ -1,21 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using mvc1;
+using mvc1.Interfaces;
+using mvc1.Repository;
+using mvc1.Service;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
-string conx = builder.Configuration.GetConnectionString("DefaultConnectionString");
-// Add services to the container.
+string conx = builder.Configuration.GetConnectionString("DefaultConnectionString")!;
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDBContext>(options => {
     options.UseSqlServer(conx);
 });
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
